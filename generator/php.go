@@ -56,7 +56,6 @@ func (pg phpGo) generateClass() string {
 	fileName := className + ".php"
 	namespace := path[0 : len(path)-len(className)-1]
 	destinationPath := namespace + "/" + fileName
-
 	/** check existing php class */
 	if _, err := os.Stat(destinationPath); err == nil {
 		return "File already exist"
@@ -79,7 +78,7 @@ func (pg phpGo) generateClass() string {
 	lines := pg.getTemplate()
 	var newLines []string
 	for _, line := range lines {
-		strData := strings.Replace(line, "DummyNamespace", strings.ReplaceAll(namespace, "/", "\\"), -1)
+		strData := strings.Replace(line, "DummyNamespace", strings.ReplaceAll(strings.Title(namespace), "/", "\\"), -1)
 		strData = strings.Replace(strData, "DummyClass", className, -1)
 		newLines = append(newLines, strData)
 	}
