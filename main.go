@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/mmuflih/file-generator/generator"
@@ -16,6 +17,11 @@ func main() {
 	switch arg[0] {
 	case "php":
 		pg := generator.NewPhpGo(arg)
+		pg.Generate()
+		break
+	case "go":
+		fmt.Println("Generate file go")
+		pg := generator.NewGo(arg)
 		pg.Generate()
 		break
 	default:
