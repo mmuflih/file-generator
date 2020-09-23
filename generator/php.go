@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 type phpGo struct {
@@ -26,6 +27,7 @@ func (pg phpGo) getTemplate() []string {
 
 /**
  * Created by Muhammad Muflih Kholidin
+ * at NOW
  * https://github.com/mmuflih
  * muflic.24@gmail.com
  **/
@@ -80,6 +82,7 @@ func (pg phpGo) generateClass() string {
 	for _, line := range lines {
 		strData := strings.Replace(line, "DummyNamespace", strings.ReplaceAll(strings.Title(namespace), "/", "\\"), -1)
 		strData = strings.Replace(strData, "DummyClass", className, -1)
+		strData = strings.Replace(strData, "NOW", time.Now().Format("2006-01-02 15:04:05"), -1)
 		newLines = append(newLines, strData)
 	}
 	output := strings.Join(newLines, "\n")
