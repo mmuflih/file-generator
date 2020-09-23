@@ -32,6 +32,7 @@ func (df default0) Default() {
 	fmt.Println("\n" +
 		"    fg php class App/Core/Handler\n" +
 		"    fg go struct App/Core/Handler\n" +
+		"    fg go service App/Core/Handler\n" +
 		"    fg go App/Core/Handler\n" +
 		"\n")
 }
