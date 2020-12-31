@@ -105,11 +105,18 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 	items := strings.Split(path, "/")
 	className := items[len(items)-1]
 	fileName := strings.ToLower(className) + ".go"
-	filePath := path[0 : len(path)-len(className)-1]
+	filePath := ""
+	pathLength := len(path)
+	classNameLength := len(className)
+	fmt.Println(pathLength, classNameLength)
+	if pathLength > classNameLength {
+		filePath = path[0 : pathLength-classNameLength-1]
+		filePath += "/"
+	}
 	if tipe == "service" {
 		fileName = strings.ToLower(className) + "_service.go"
 	}
-	destinationPath := filePath + "/" + fileName
+	destinationPath := filePath + fileName
 	/** check existing php class */
 	if _, err := os.Stat(destinationPath); err == nil {
 		return errors.New("File already exist"), nil
@@ -130,7 +137,11 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 	defer destination.Close()
 
 	var newLines []string
-	var packageName = items[len(items)-2]
+	packageName := "main"
+	fmt.Println(len(items))
+	if len(items) > 1 {
+		packageName = items[len(items)-2]
+	}
 	for _, line := range lines {
 		strData := strings.Replace(line, "DummyPackage", strings.ReplaceAll(strings.ToLower(packageName), "/", "\\"), -1)
 		strData = strings.Replace(strData, "NOW", time.Now().Format("2006-01-02 15:04:05"), -1)
