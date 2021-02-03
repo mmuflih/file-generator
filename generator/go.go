@@ -79,6 +79,56 @@ func NewDummyRepositoryRepo() DummyRepositoryRepository {
 	return strings.Split(templ, "\n")
 }
 
+func (pg fileGo) generateHandlerTmp() []string {
+	templ := fmt.Sprintf(`package DummyPackage
+
+%s
+
+type DummyHandlerHandler interface {
+	Handle() (interface{}, error)
+}
+
+type dummyHandler struct {
+
+}
+
+func NewDummyHandlerHandler() DummyHandlerHandler {
+	return &dummyHandler{}
+}
+
+func (h dummyHandler) Handle() (interface{}, error) {
+
+}
+
+`, header)
+	return strings.Split(templ, "\n")
+}
+
+func (pg fileGo) generateReaderTmp() []string {
+	templ := fmt.Sprintf(`package DummyPackage
+
+%s
+
+type DummyReaderReader interface {
+	Read() (interface{}, error)
+}
+
+type dummyReader struct {
+
+}
+
+func NewDummyReaderReader() DummyReaderReader {
+	return &dummyReader{}
+}
+
+func (h dummyHandler) Read() (interface{}, error) {
+	
+}
+
+`, header)
+	return strings.Split(templ, "\n")
+}
+
 func (pg fileGo) Generate() {
 	switch pg.args[1] {
 	case "struct":
@@ -86,6 +136,12 @@ func (pg fileGo) Generate() {
 		break
 	case "service":
 		fmt.Println(pg.generateService())
+		break
+	case "handler":
+		fmt.Println(pg.generateHandler())
+		break
+	case "reader":
+		fmt.Println(pg.generateReader())
 		break
 	default:
 		fmt.Println(pg.generateGo())
@@ -101,6 +157,12 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 	} else if tipe == "service" {
 		path = pg.args[2]
 		lines = pg.getServiceTemplate()
+	} else if tipe == "handler" {
+		path = pg.args[2]
+		lines = pg.generateHandlerTmp()
+	} else if tipe == "reader" {
+		path = pg.args[2]
+		lines = pg.generateReaderTmp()
 	}
 	items := strings.Split(path, "/")
 	className := items[len(items)-1]
@@ -115,6 +177,10 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 	}
 	if tipe == "service" {
 		fileName = strings.ToLower(className) + "_service.go"
+	} else if tipe == "handler" {
+		fileName = strings.ToLower(className) + "_handler.go"
+	} else if tipe == "reader" {
+		fileName = strings.ToLower(className) + "_reader.go"
 	}
 	destinationPath := filePath + fileName
 	/** check existing php class */
@@ -150,6 +216,12 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 		} else if tipe == "service" {
 			strData = strings.Replace(strData, "dummyStruct", makeFirstLowerCase(className), -1)
 			strData = strings.Replace(strData, "DummyRepository", className, -1)
+		} else if tipe == "handler" {
+			strData = strings.Replace(strData, "dummyHandler", makeFirstLowerCase(className), -1)
+			strData = strings.Replace(strData, "DummyHandlerHandler", className, -1)
+		} else if tipe == "reader" {
+			strData = strings.Replace(strData, "dummyHandler", makeFirstLowerCase(className), -1)
+			strData = strings.Replace(strData, "DummyHandlerHandler", className, -1)
 		}
 		newLines = append(newLines, strData)
 	}
@@ -163,6 +235,26 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 
 func (pg fileGo) generateService() string {
 	err, goH := pg.generate("service")
+	if err != nil {
+		fmt.Println(err)
+		return err.Error()
+	}
+	ioutil.WriteFile(goH.DestinationPath, goH.Output, 0644)
+	return "Generated " + goH.ClassName + " => " + goH.DestinationPath
+}
+
+func (pg fileGo) generateHandler() string {
+	err, goH := pg.generate("handler")
+	if err != nil {
+		fmt.Println(err)
+		return err.Error()
+	}
+	ioutil.WriteFile(goH.DestinationPath, goH.Output, 0644)
+	return "Generated " + goH.ClassName + " => " + goH.DestinationPath
+}
+
+func (pg fileGo) generateReader() string {
+	err, goH := pg.generate("reader")
 	if err != nil {
 		fmt.Println(err)
 		return err.Error()
