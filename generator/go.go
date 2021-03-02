@@ -54,6 +54,29 @@ func (pg fileGo) getStructTemplate() []string {
 type DummyStruct struct {
 
 }
+
+func NewDummyStruct() *DummyStruct {
+	return &DummyStruct{
+
+	}
+}
+
+func (m DummyStruct) GenerateResponse() interface{} {
+	return struct {
+
+	}{
+		
+	}
+}
+
+func (m DummyStruct) GeneratePublicResponse() interface{} {
+	return struct {
+
+	}{
+		
+	}
+}
+
 `, header)
 	return strings.Split(templ, "\n")
 }
@@ -88,15 +111,15 @@ type DummyHandlerHandler interface {
 	Handle() (interface{}, error)
 }
 
-type dummyHandler struct {
+type dummyHandlerH struct {
 
 }
 
 func NewDummyHandlerHandler() DummyHandlerHandler {
-	return &dummyHandler{}
+	return &dummyHandlerH{}
 }
 
-func (h dummyHandler) Handle() (interface{}, error) {
+func (h dummyHandlerH) Handle() (interface{}, error) {
 
 }
 
@@ -113,15 +136,15 @@ type DummyReaderReader interface {
 	Read() (interface{}, error)
 }
 
-type dummyReader struct {
+type dummyReaderR struct {
 
 }
 
 func NewDummyReaderReader() DummyReaderReader {
-	return &dummyReader{}
+	return &dummyReaderR{}
 }
 
-func (h dummyHandler) Read() (interface{}, error) {
+func (h dummyReaderR) Read() (interface{}, error) {
 	
 }
 
@@ -218,10 +241,10 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 			strData = strings.Replace(strData, "DummyRepository", className, -1)
 		} else if tipe == "handler" {
 			strData = strings.Replace(strData, "dummyHandler", makeFirstLowerCase(className), -1)
-			strData = strings.Replace(strData, "DummyHandlerHandler", className, -1)
+			strData = strings.Replace(strData, "DummyHandler", className, -1)
 		} else if tipe == "reader" {
-			strData = strings.Replace(strData, "dummyHandler", makeFirstLowerCase(className), -1)
-			strData = strings.Replace(strData, "DummyHandlerHandler", className, -1)
+			strData = strings.Replace(strData, "dummyReader", makeFirstLowerCase(className), -1)
+			strData = strings.Replace(strData, "DummyReader", className, -1)
 		}
 		newLines = append(newLines, strData)
 	}

@@ -45,6 +45,17 @@ class DummyClass
 }
 
 func (pg phpGo) Generate() {
+	var options []string
+
+	for _, opt := range pg.args {
+		if strings.Contains(opt, "--") {
+			options = append(options, opt)
+			continue
+		}
+	}
+
+	fmt.Println(options)
+
 	switch pg.args[1] {
 	case "class":
 		fmt.Println(pg.generateClass())
