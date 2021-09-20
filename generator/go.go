@@ -7,13 +7,11 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	"time"
 )
 
 const header string = `
 /**
  * Created by Muhammad Muflih Kholidin
- * at NOW
  * https://github.com/mmuflih
  * muflic.24@gmail.com
  **/
@@ -233,7 +231,6 @@ func (pg fileGo) generate(tipe string) (error, *goHelper) {
 	}
 	for _, line := range lines {
 		strData := strings.Replace(line, "DummyPackage", strings.ReplaceAll(strings.ToLower(packageName), "/", "\\"), -1)
-		strData = strings.Replace(strData, "NOW", time.Now().Format("2006-01-02 15:04:05"), -1)
 		if tipe == "struct" {
 			strData = strings.Replace(strData, "DummyStruct", className, -1)
 		} else if tipe == "service" {
